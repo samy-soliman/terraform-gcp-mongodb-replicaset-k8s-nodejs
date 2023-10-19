@@ -1,0 +1,4 @@
+*SA_KEY*
+*.tfstate
+*.terraform*
+api
