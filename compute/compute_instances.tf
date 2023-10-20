@@ -17,7 +17,7 @@ resource "google_compute_instance" "management_vm" {
 
   boot_disk {
     initialize_params {
-      image = "debian-cloud/debian-11"
+      image = "ubuntu-os-cloud/ubuntu-2004-lts"
     }
   }
 
