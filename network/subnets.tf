@@ -6,8 +6,6 @@ resource "google_compute_subnetwork" "management_subnet" {
   depends_on = [google_compute_network.mongo_vpc]
 }
 
-
-
 resource "google_compute_subnetwork" "workload_subnet" {
   name          = "workload-subnetwork"
   ip_cidr_range = "10.1.0.0/24"
