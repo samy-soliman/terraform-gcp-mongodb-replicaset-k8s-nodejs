@@ -3,10 +3,16 @@ resource "google_service_account" "compute_instance_service_account" {
   display_name = "compute instance"
 }
 
-resource "google_project_iam_member" "artifact-admin-iam" {
+resource "google_project_iam_member" "artifact_admin_iam_vm" {
   project = "exalted-kit"
   role  = "roles/artifactregistry.admin"
   member = "serviceAccount:${google_service_account.compute_instance_service_account.email}"
+}
+
+resource "google_project_iam_member" "container_admin_iam_service_account" {
+  project = "exalted-kit"
+  role    = "roles/container.admin"
+  member  = "serviceAccount:${google_service_account.compute_instance_service_account.email}"
 }
 
 
@@ -17,7 +23,7 @@ resource "google_compute_instance" "management_vm" {
 
   boot_disk {
     initialize_params {
-      image = "ubuntu-os-cloud/ubuntu-2004-lts"
+      image = "debian-cloud/debian-11"    #"ubuntu-os-cloud/ubuntu-2004-lts"
     }
   }
 
@@ -30,4 +36,6 @@ resource "google_compute_instance" "management_vm" {
     email  = google_service_account.compute_instance_service_account.email
     scopes = ["cloud-platform"]
   }
+
+  #depends_on = [google_compute_subnetwork.management_subnet]
 }
