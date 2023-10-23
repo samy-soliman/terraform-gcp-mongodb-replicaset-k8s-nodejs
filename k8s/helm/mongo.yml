@@ -1,0 +1,8 @@
+architecture: replicaset
+replicaCount: 3
+
+persistence:
+  persistence.storageClass: "standard-rwo"
+
+auth:
+  rootPassword: secret-root-password

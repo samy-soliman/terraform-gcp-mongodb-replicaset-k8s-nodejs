@@ -1,0 +1,14 @@
+# Stage 1: Build the Node.js application
+FROM node:14 as builder
+
+WORKDIR /app
+
+COPY . .
+
+RUN npm install
+
+WORKDIR /app
+
+# You can change this to match your web port if needed
+EXPOSE 3000
+CMD ["node", "index.js"]

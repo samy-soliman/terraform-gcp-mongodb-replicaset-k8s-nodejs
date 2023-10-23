@@ -1,0 +1,56 @@
+mongo -u drage -p secretpassword123 --authenticationDatabase inventory
+
+kubectl exec -it mongodb-0 -n database -- mongo
+mongodb://drage:secretpassword123@mongodb-0.mongodb-headless.database/inventory
+
+gcloud auth print-access-token | sudo docker login -u oauth2accesstoken --password-stdin  us-east1-docker.pkg.dev
+sudo docker build -t us-east1-docker.pkg.dev/exalted-kit/mongo-registry/nodejs:v5 .
+sudo docker push  us-east1-docker.pkg.dev/exalted-kit/mongo-registry/nodejs:v5
+###
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mongo-test-pod
+  namespace: staging
+spec:
+  containers:
+  - name: mongo-test-container
+    image: us-east1-docker.pkg.dev/exalted-kit/mongo-registry/testpood:v1
+    command: ["/bin/bash", "-c", "sleep infinity"]
+    stdin: true
+    tty: true
+  restartPolicy: Never
+
+###
+
+###
+# Use Ubuntu as the base image
+FROM ubuntu:20.04
+
+# Install the MongoDB client
+RUN apt-get update && apt-get install -y mongodb-clients && rm -rf /var/lib/apt/lists/*
+
+# Set the default shell
+SHELL ["/bin/bash", "-c"]
+
+# Set the entry point to the MongoDB client
+ENTRYPOINT ["/bin/bash"]
+
+###
+###
+
+# Stage 1: Build the Node.js application
+FROM node:14-alpine
+
+WORKDIR /app
+COPY . .
+
+EXPOSE 3000
+
+# Set the default shell
+SHELL ["/bin/bash", "-c"]
+
+ENTRYPOINT ["/bin/bash"]
+
+###

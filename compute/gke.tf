@@ -19,7 +19,7 @@ resource "google_container_cluster" "gke_primary_cluster" {
     networking_mode = "VPC_NATIVE"
     
     private_cluster_config {
-        enable_private_endpoint = true
+        enable_private_endpoint = false
         enable_private_nodes = true
 
         # ip address for the control plane

@@ -1,0 +1,68 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: staging
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: creds
+  namespace: staging
+type: Opaque
+data:
+  db-password: c2VjcmV0cGFzc3dvcmQxMjM=
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: drage
+  namespace: staging
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: drage
+  template:
+    metadata:
+      labels:
+        app: drage
+    spec:
+      containers:
+      - name: drage
+        image: us-east1-docker.pkg.dev/exalted-kit/mongo-registry/nodejs:v4
+        ports:
+        - name: http
+          containerPort: 3000
+        env:
+        - name: WEBport
+          value: "3000"
+        - name: DBuser
+          value: "drage"
+        - name: DBhosts
+          value: "mongodb-0.mongodb-headless.database"
+        - name: DBpass
+          valueFrom:
+            secretKeyRef:
+              name: creds
+              key: db-password
+        resources:
+          limits:
+            cpu: 200m
+            memory: 256Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: drage
+  namespace: staging
+spec:
+  type: ClusterIP
+  ports:
+  - name: api
+    port: 4000
+    targetPort: http
+  selector:
+    app: drage
