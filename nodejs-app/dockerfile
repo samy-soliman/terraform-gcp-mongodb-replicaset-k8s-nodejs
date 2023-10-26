@@ -1,13 +1,13 @@
 # Stage 1: Build the Node.js application
-FROM node:14 as builder
+FROM node:16 as builder
 
 WORKDIR /app
 
-COPY . .
+COPY package*.json /app
 
 RUN npm install
 
-WORKDIR /app
+COPY .  /app
 
 # You can change this to match your web port if needed
 EXPOSE 3000

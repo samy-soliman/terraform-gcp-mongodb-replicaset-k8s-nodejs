@@ -1,0 +1,8 @@
+# Use the official MongoDB image as the base image with the desired version.
+FROM mongo:5.0.15
+
+# Expose the MongoDB default port (27017).
+EXPOSE 27017
+
+# Set the command to start MongoDB.
+#CMD ["mongod", "--bind_ip_all"]

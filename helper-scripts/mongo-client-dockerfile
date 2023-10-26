@@ -1,0 +1,36 @@
+##########################################################
+# use this commands to troubleshoot the db connection
+mongo -u drage -p secretpassword123 --authenticationDatabase inventory
+kubectl exec -it mongo-test-pod -n database -- /bin/bash    # mongo-client
+
+kubectl logs drage-79c95d6b7-bqb4q  -n database
+kubectl exec -it mongodb-0  -- mongo   #-n database   # mongo-pod
+mongodb://drage:secretpassword123@mongo-0.mongo/test
+############################################################
+### this is an image for testing your mongodb replica
+### by accessing it from this image client and test its connectivity using db uri
+# Use Ubuntu as the base image
+FROM ubuntu:20.04
+# Install the MongoDB client
+RUN apt-get update && apt-get install -y mongodb-clients && rm -rf /var/lib/apt/lists/*
+# Set the default shell
+SHELL ["/bin/bash", "-c"]
+# Set the entry point to the MongoDB client
+ENTRYPOINT ["/bin/bash"]
+############################################################
+# the image pod to use
+###
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mongo-test-pod
+  namespace: staging
+spec:
+  containers:
+  - name: mongo-test-container
+    image: us-east1-docker.pkg.dev/exalted-kit/mongo-registry/testclient:v1
+    command: ["/bin/bash", "-c", "sleep infinity"]
+    stdin: true
+    tty: true
+  restartPolicy: Never
+###

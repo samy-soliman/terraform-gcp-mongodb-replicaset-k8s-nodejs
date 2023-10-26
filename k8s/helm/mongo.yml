@@ -1,3 +1,5 @@
+# bitnami helm chart 
+
 architecture: replicaset
 replicaCount: 3
 

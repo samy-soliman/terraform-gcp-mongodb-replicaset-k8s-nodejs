@@ -12,14 +12,14 @@ resource "google_project_iam_member" "artifact_admin_iam_gke" {
 
 resource "google_container_cluster" "gke_primary_cluster" {
     
-    name = "gke-cluster"
+    name = "pgke-cluster"
     location = "us-central1"
     network = "mongo-vpc"
     subnetwork = "workload-subnetwork"
     networking_mode = "VPC_NATIVE"
     
     private_cluster_config {
-        enable_private_endpoint = false
+        enable_private_endpoint = true
         enable_private_nodes = true
 
         # ip address for the control plane
@@ -65,6 +65,9 @@ resource "google_container_node_pool" "mongo_node_pool" {
   node_config {
     preemptible  = true
     machine_type = "e2-medium"
+
+    // Specify the disk size here
+    disk_size_gb = 40
 
     # Google recommends custom service accounts that have cloud-platform scope and permissions granted via IAM Roles.
     service_account = google_service_account.gke_service_account.email

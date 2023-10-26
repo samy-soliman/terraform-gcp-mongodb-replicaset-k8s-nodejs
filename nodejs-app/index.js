@@ -1,57 +1,44 @@
 const { MongoClient } = require('mongodb');
-const express = require('express');
-const app = express();
+const express = require('express')
+const app = express()
 
-const WEBport = process.env.WEBport || 3000;
-const DBuser = process.env.DBuser;
-const DBpass = process.env.DBpass;
-const DBhosts = process.env.DBhosts;
-
-const mongoConnectRetryInterval = 5000; // 5 seconds (adjust as needed)
-
-async function connectToMongoDB() {
-  const uri = `mongodb://${DBuser}:${DBpass}@${DBhosts}/test?readPreference=nearest&replicaSet=rs0&authSource=admin`;
-  const client = new MongoClient(uri);
-
-  try {
-    await client.connect();
-    return client;
-  } catch (error) {
-    console.error('MongoDB connection error:', error);
-    // Retry the connection after a delay
-    await new Promise((resolve) => setTimeout(resolve, mongoConnectRetryInterval));
-    return connectToMongoDB();
-  }
-}
+const WEBport = process.env.WEBport || 3000
 
 async function main() {
-  let client;
+    // `mongodb://admin:password@mongo-0.mongo:27017/testdb`
+    // mongodb://mongo-0.mongo,mongo-1.mongo,mongo-2.mongo:27017/dbname_?
+    
+    const uri = `mongodb://drage:secretpassword123@mongodb-0.mongodb-headless.database:27017/inventory`;
+    const client = new MongoClient(uri);
 
-  try {
-    client = await connectToMongoDB();
+    try {
 
-    let db = client.db("test");
-    let coll = db.collection("visits");
+        await client.connect();
 
-    let collectionExists = await coll.findOne({ id: "count" }).then((r) => r);
-    collectionExists ? true : await coll.insertOne({ id: "count", total: 0 });
+        let db = client.db("inventory")
+        let coll = db.collection("visits")
 
-    app.get('/', async (req, res) => {
-      current = await coll.findOne({ id: "count" }).then((r) => r.total);
-      latest = await coll.updateOne({ id: "count" }, { $set: { total: current + 1 } });
-      res.send("Visits: " + (current + 1));
-    });
+        let collectionExists = await coll.findOne({id: "count"}).then(r => r);
+        collectionExists ? true : await coll.insertOne({id: "count", total: 0})
 
-    app.listen(WEBport, () => {
-      console.log(`App is listening on port ${WEBport}`);
-    });
-  } catch (e) {
-    console.error(e);
-  } finally {
-    if (client) {
-      await client.close();
+        app.get('/', async (req, res) => {
+            await client.connect();
+            current = await coll.findOne({id: "count"}).then(r => r.total)
+            latest = await coll.updateOne({id: "count"}, {$set: {total: current+1}})
+            // console.log("Visits: " + (current+1))
+            res.send("Visits: " + (current+1))
+            await client.close();
+          })
+
+        app.listen(WEBport, () => {
+        console.log(`App is listening on port ${WEBport}`)
+        })
+
+    } catch (e) {
+        console.error(e);
+    } finally {
+        await client.close();
     }
-  }
 }
 
 main().catch(console.error);

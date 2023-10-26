@@ -1,28 +1,19 @@
 #!/bin/bash
 
-# Remove Docker if already installed
-sudo apt-get -y remove docker docker-engine docker.io containerd runc
+sudo apt update -y
+sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
 
-# Update package lists
-sudo apt-get -y update && sudo apt-get -y upgrade
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 
-# Install Docker dependencies
-sudo apt-get -y install apt-transport-https ca-certificates curl software-properties-common
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu focal stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
-# Add Docker GPG key
-curl -fsSL https://yum.dockerproject.org/gpg | sudo apt-key add -
+sudo apt update -y
 
-# Add Docker repository
-sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+sudo apt install -y docker-ce
 
-# Install Docker
-sudo apt-get -y update
-sudo apt-get -y install docker-ce docker-ce-cli containerd.io
+sudo systemctl start docker
+sudo systemctl enable docker
 
-# Start Docker service
-sudo service docker start
+sudo docker --version
 
-# Add the current user to the 'docker' group (to avoid using 'sudo' for Docker commands)
-sudo usermod -aG docker $USER
-
-echo "Docker installation completed!"
+sudo usermod -aG docker Lenovo
