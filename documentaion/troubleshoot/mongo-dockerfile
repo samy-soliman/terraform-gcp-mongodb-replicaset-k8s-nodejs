@@ -1,3 +1,5 @@
+# image for mongodb to use it for manual mongodb replicaset 
+
 # Use the official MongoDB image as the base image with the desired version.
 FROM mongo:5.0.15
 

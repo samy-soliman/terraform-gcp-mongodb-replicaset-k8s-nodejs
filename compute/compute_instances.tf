@@ -4,13 +4,13 @@ resource "google_service_account" "compute_instance_service_account" {
 }
 
 resource "google_project_iam_member" "artifact_admin_iam_vm" {
-  project = "exalted-kit"
+  project = var.project_id
   role  = "roles/artifactregistry.admin"
   member = "serviceAccount:${google_service_account.compute_instance_service_account.email}"
 }
 
 resource "google_project_iam_member" "container_admin_iam_service_account" {
-  project = "exalted-kit"
+  project = var.project_id
   role    = "roles/container.admin"
   member  = "serviceAccount:${google_service_account.compute_instance_service_account.email}"
 }
@@ -18,17 +18,17 @@ resource "google_project_iam_member" "container_admin_iam_service_account" {
 
 resource "google_compute_instance" "management_vm" {
   name         = "management-vm"
-  machine_type = "n2-standard-2"
-  zone         = "us-east1-b"
+  machine_type = var.machine_type
+  zone         = var.management_vm_subnet
 
   boot_disk {
     initialize_params {
-      image = "debian-cloud/debian-11"    #"ubuntu-os-cloud/ubuntu-2004-lts"
+      image = "debian-cloud/debian-11"    # other type "ubuntu-os-cloud/ubuntu-2004-lts"
     }
   }
 
   network_interface {
-    subnetwork = "management-subnetwork"
+    subnetwork = var.management_vm_subnetwork_interface
     #access_config {// Ephemeral public IP}
   }
 
@@ -36,6 +36,4 @@ resource "google_compute_instance" "management_vm" {
     email  = google_service_account.compute_instance_service_account.email
     scopes = ["cloud-platform"]
   }
-
-  #depends_on = [google_compute_subnetwork.management_subnet]
 }

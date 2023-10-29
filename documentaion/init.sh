@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# install-docker
 sudo apt update -y
 sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
 
@@ -17,3 +18,7 @@ sudo systemctl enable docker
 sudo docker --version
 
 sudo usermod -aG docker Lenovo
+
+# install gcp gke auth tools
+sudo apt-get install kubectl
+sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin

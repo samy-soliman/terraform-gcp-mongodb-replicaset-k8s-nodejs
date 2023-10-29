@@ -3,19 +3,23 @@ const express = require('express')
 const app = express()
 
 const WEBport = process.env.WEBport || 3000
+const DBuser = process.env.DBuser
+const DBpass = process.env.DBpass
+const DBhosts = process.env.DBhosts
 
 async function main() {
-    // `mongodb://admin:password@mongo-0.mongo:27017/testdb`
-    // mongodb://mongo-0.mongo,mongo-1.mongo,mongo-2.mongo:27017/dbname_?
-    
-    const uri = `mongodb://drage:secretpassword123@mongodb-0.mongodb-headless.database:27017/inventory`;
+
+    //const uri = `mongodb://drage:secretpassword123@mongodb-0.mongodb-headless.database:27017/inventory`;
+
+    const uri = `mongodb://${DBuser}:${DBpass}@${DBhosts}/test-mongodb`;
+
     const client = new MongoClient(uri);
 
     try {
 
         await client.connect();
 
-        let db = client.db("inventory")
+        let db = client.db("test-mongodb")
         let coll = db.collection("visits")
 
         let collectionExists = await coll.findOne({id: "count"}).then(r => r);

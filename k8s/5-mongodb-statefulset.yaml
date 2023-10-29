@@ -37,7 +37,7 @@ spec:
         sysctls: []
       containers:
       - name: mongodb
-        image: us-east1-docker.pkg.dev/exalted-kit/mongo-registry/mongo:v1
+        image: us-east1-docker.pkg.dev/exalted-kit/mongo-registry/bitnami:v1
         imagePullPolicy: IfNotPresent
         securityContext:
           runAsNonRoot: true
@@ -62,9 +62,9 @@ spec:
         - name: MONGODB_ADVERTISED_HOSTNAME
           value: "$(MY_POD_NAME).$(K8S_SERVICE_NAME).$(MY_POD_NAMESPACE).svc.cluster.local"
         - name: MONGODB_USERNAME
-          value: "drage"
+          value: "sami"
         - name: MONGODB_DATABASE
-          value: "inventory"
+          value: "test-mongodb"
         - name: MONGODB_REPLICA_SET_NAME
           value: "rs0"
         - name: MONGODB_PASSWORD

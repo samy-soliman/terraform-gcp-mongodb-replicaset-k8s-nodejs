@@ -4,8 +4,8 @@ mongo -u drage -p secretpassword123 --authenticationDatabase inventory
 kubectl exec -it mongo-test-pod -n database -- /bin/bash    # mongo-client
 
 kubectl logs drage-79c95d6b7-bqb4q  -n database
-kubectl exec -it mongodb-0  -- mongo   #-n database   # mongo-pod
-mongodb://drage:secretpassword123@mongo-0.mongo/test
+kubectl exec -it mongodb-0  -- mongo   -n database   # mongo-pod
+mongodb://drage:secretpassword123@mongo-0.mongo/test  # database uri
 ############################################################
 ### this is an image for testing your mongodb replica
 ### by accessing it from this image client and test its connectivity using db uri

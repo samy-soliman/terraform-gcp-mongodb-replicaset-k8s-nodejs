@@ -4,7 +4,7 @@ resource "google_service_account" "gke_service_account" {
 }
 
 resource "google_project_iam_member" "artifact_admin_iam_gke" {
-  project = "exalted-kit"
+  project = var.project_id
   role    = "roles/artifactregistry.admin"
   member  = "serviceAccount:${google_service_account.gke_service_account.email}"
 }
@@ -13,9 +13,9 @@ resource "google_project_iam_member" "artifact_admin_iam_gke" {
 resource "google_container_cluster" "gke_primary_cluster" {
     
     name = "pgke-cluster"
-    location = "us-central1"
-    network = "mongo-vpc"
-    subnetwork = "workload-subnetwork"
+    location = var.location
+    network = var.network 
+    subnetwork = var.subnetwork
     networking_mode = "VPC_NATIVE"
     
     private_cluster_config {
@@ -58,7 +58,7 @@ resource "google_container_cluster" "gke_primary_cluster" {
 
 resource "google_container_node_pool" "mongo_node_pool" {
   name       = "mongo-node-pool"
-  location   = "us-central1"
+  location   = var.location
   cluster    = google_container_cluster.gke_primary_cluster.name
   node_count = 1
 
