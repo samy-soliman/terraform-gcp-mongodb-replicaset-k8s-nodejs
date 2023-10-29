@@ -19,7 +19,7 @@ resource "google_project_iam_member" "container_admin_iam_service_account" {
 resource "google_compute_instance" "management_vm" {
   name         = "management-vm"
   machine_type = var.machine_type
-  zone         = var.management_vm_subnet
+  zone         = var.management_vm_subnet_zone
 
   boot_disk {
     initialize_params {

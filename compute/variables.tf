@@ -4,8 +4,8 @@ variable "project_id" {
 }
 #### vm variables
 # management_vm_subnet
-variable "management_vm_subnet" {
-    type = string    # module.network.management_subnet.region
+variable "management_vm_subnet_zone" {
+    type = string    # management_subnet_zone
 }
 # machine_type
 variable "machine_type" {

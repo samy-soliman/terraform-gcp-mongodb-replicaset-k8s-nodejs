@@ -17,8 +17,8 @@ gcloud container clusters get-credentials gke-cluster --region us-central1 --pro
 <h3> 4- get mongodb image and push to registry </h3>
 # pull bitnami image, tag and push it to our gcp registry</br>
 # note this is the name in our nodejs app for the db uri</br>
-sudo docker pull docker.io/bitnami/mongodb:4.4.4</br>
-sudo docker tag docker.io/bitnami/mongodb:4.4.4 us-east1-docker.pkg.dev/exalted-kit/mongo-registry/bitnami:v1</br>
+sudo docker pull docker.io/bitnami/mongodb:5.0</br>
+sudo docker tag docker.io/bitnami/mongodb:5.0 us-east1-docker.pkg.dev/exalted-kit/mongo-registry/bitnami:v1</br>
 
 <h3> 4- get node app, build docker image and push to registry </h3>
 # build the nodejs app docker image and push it </br>
