@@ -37,7 +37,7 @@ spec:
         sysctls: []
       containers:
       - name: mongodb
-        image: us-east1-docker.pkg.dev/exalted-kit/mongo-registry/bitnami:v1
+        image: us-east1-docker.pkg.dev/exalted-kit/mongo-registry/bitnami:1
         imagePullPolicy: IfNotPresent
         securityContext:
           runAsNonRoot: true

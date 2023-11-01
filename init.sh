@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# delete /var/lib/man-db/auto-update to handle stuck
+sudo rm /var/lib/man-db/auto-update
+
+# install git
+sudo apt update -y 
+sudo apt install -y git 
+
 # install-docker
 sudo apt update -y
 sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
@@ -15,9 +22,9 @@ sudo apt install -y docker-ce
 sudo systemctl start docker
 sudo systemctl enable docker
 
-sudo docker --version
+#sudo docker --version
 
-sudo usermod -aG docker Lenovo
+#sudo usermod -aG docker Lenovo
 
 # install gcp gke auth tools
 sudo apt-get install kubectl

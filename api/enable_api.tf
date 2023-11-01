@@ -4,8 +4,6 @@ provider "google" {
     region =  "us-east1"   # default for resources
 }
 
-
-
 #resource "google_project_service" "service_usage" {
 #  project = "exalted-kit"
 #  service = "serviceusage.googleapis.com"

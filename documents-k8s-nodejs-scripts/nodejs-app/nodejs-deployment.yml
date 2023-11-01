@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
       - name: nodejs
-        image: us-east1-docker.pkg.dev/exalted-kit/mongo-registry/nodejs:v4
+        image: us-east1-docker.pkg.dev/exalted-kit/mongo-registry/nodejs:1
         ports:
         - name: http
           containerPort: 3000

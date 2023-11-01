@@ -36,4 +36,10 @@ resource "google_compute_instance" "management_vm" {
     email  = google_service_account.compute_instance_service_account.email
     scopes = ["cloud-platform"]
   }
+
+
+  depends_on = [google_container_cluster.gke_primary_cluster]
+
+  metadata_startup_script = "${file("/init.sh")}"
+
 }
