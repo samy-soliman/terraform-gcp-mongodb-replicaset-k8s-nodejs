@@ -9,3 +9,4 @@ Notes:
 - The **GKE cluster (private)** will NOT have access to the internet.
 - The **Management VM** will be used to manage the **GKE cluster** and **build/push** images to the **Artifact Registry**.
 - All deployed images must be stored in Artifact Registry.
+- See documets folder for instructions.
