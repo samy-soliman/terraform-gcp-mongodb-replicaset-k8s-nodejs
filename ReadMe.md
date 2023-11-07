@@ -59,8 +59,6 @@ Notes:
 
 8. Once you get the success message for deploying the resources, we can then start our app deployment.
 
-image suceess terraform
-
 9. To start deploying apps, we start by ssh to our private vm instance, replace your project id and vm zone.
 
 ```Shell
@@ -112,3 +110,61 @@ image suceess terraform
 ```
 
 19. That should be it now lets see a quick run in action.
+20. After it do not forget to clean your resources with
+
+```Shell
+    terraform destroy --var-file=dev.tfvars
+```
+
+## Quick Run,  YAY!
+1. I have steps 1 to 6 covered to i will jump with deploying the app.
+
+2. Confirm our infrastructure is created inside gcp console
+
+3. Now i am going to ssh into my private vm.
+
+4. Now to clone the mongo and nodejs files, i have them in a diffrent repo so you can use it but do not forget to alter the images tags.
+
+```Shell
+    git clone https://github.com/samy-soliman/nodejs-k8s.git
+```
+5. authenticate docker
+
+```Shell
+    gcloud auth print-access-token | sudo docker login -u oauth2accesstoken --password-stdin  us-east1-docker.pkg.dev
+```
+
+6. Add GKE credentials, we can test it by running a simble listing of our nodes.
+```Shell
+    gcloud container clusters get-credentials pgke-cluster --region us-central1 --project exalted-kit
+```
+
+7. Get the bitnami image, tag it and push it to out resgistry.
+
+```Shell
+    sudo docker pull docker.io/bitnami/mongodb:5.0
+    sudo docker tag docker.io/bitnami/mongodb:5.0 us-east1-docker.pkg.dev/exalted-kit/mongo-registry/bitnami:1
+    sudo docker push us-east1-docker.pkg.dev/exalted-kit/mongo-registry/bitnami:1
+```
+
+
+8. Now lets build our nodejs app and push it our registry.
+
+```Shell
+    sudo docker build -t us-east1-docker.pkg.dev/exalted-kit/mongo-registry/nodejs:1 .
+    sudo docker push  us-east1-docker.pkg.dev/exalted-kit/mongo-registry/nodejs:1
+```
+
+9. Now lets deploy our mongo replicaSet
+
+```Shell
+    kubectl create -f k8s/
+```
+
+10. now its the final moment we are waiting deploying our nodeJS app, note that we have a LoadBalancer service to test our app so what are we waiting for!!
+
+```Shell
+    kubectl create -f nodejs-deployment.yml
+```
+
+11. 
