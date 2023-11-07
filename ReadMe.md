@@ -51,4 +51,64 @@ Notes:
     terraform init
 ```
 
-7. A
+7. Deploy resources to GCP by applting our terraform code
+
+```Shell
+    terraform apply --var-file=dev.tfvars
+```
+
+8. Once you get the success message for deploying the resources, we can then start our app deployment.
+
+image suceess terraform
+
+9. To start deploying apps, we start by ssh to our private vm instance, replace your project id and vm zone.
+
+```Shell
+    gcloud compute ssh --zone "vm-zone" "management-vm" --tunnel-through-iap --project "your-project-id"
+```
+
+10. Now the **init.sh** script in our project root directory is resposible to initialize our vm with required tools like git, docker, kubectl and gcp gke auth plugins.
+
+11. Now the following steps can be merged into a script to do it automatically but i will do it manually to clarify the steps for you. 
+12. Add nodeJS files and k8s files into a different repo and clone them into your vm.
+13. generate a gcp auth token and feed it into docker command to authenticate docker to use our artifact registry on gcp , note that this token it not permenant, replace the region with your artifact registry region.
+
+```Shell
+    gcloud auth print-access-token | sudo docker login -u oauth2accesstoken --password-stdin  your_region-docker.pkg.dev
+```
+
+14. Add credentials for GKE on private vm to enable kubectl managing our cluster, replace your cluster_name, project_id and cluster_region.
+
+```Shell
+    gcloud container clusters get-credentials cluster_name --region cluster_region --project project_id
+```
+
+15. Pull the bitnami docker image into our vm, tag it with artifact registry uri then push it to the registry,
+    do not foreget to replace your values
+
+```Shell
+    sudo docker pull docker.io/bitnami/mongodb:5.0
+    sudo docker tag docker.io/bitnami/mongodb:5.0 YourArtifactRegion-docker.pkg.dev/YourProjectID/YourRegistryName/bitnami:1
+    sudo docker push YourArtifactRegion-docker.pkg.dev/YourProjectID/YourRegistryName/bitnami:1 
+```
+
+16. Go to the node app folder and build its image with proper tag then push it to registry.
+
+```Shell
+    sudo docker build -t YourArtifactRegion-docker.pkg.dev/YourProjectID/YourRegistryName/nodejs:1 .
+    sudo docker push  YourArtifactRegion-docker.pkg.dev/YourProjectID/YourRegistryName/nodejs:1 
+```
+
+17. Not its time to action by deploying our mongo replicaset to GKE, do not forget to edit the kubernetes manifest for statefullset and arbiter with you mongo image tagged name.
+
+```Shell
+    kubectl create -f k8s/
+```
+
+18. Now That out database is ready we can start deploying our nodeJS app ro GKE, do not forget to edit the kubernetes manifest for your nodejs image tagged name.
+
+```Shell
+    kubectl create -f nodejs-deployment.yml
+```
+
+19. That should be it now lets see a quick run in action.

@@ -24,7 +24,7 @@ sudo systemctl enable docker
 
 #sudo docker --version
 
-#sudo usermod -aG docker Lenovo
+#sudo usermod -aG docker Your_user
 
 # install gcp gke auth tools
 sudo apt-get install kubectl
