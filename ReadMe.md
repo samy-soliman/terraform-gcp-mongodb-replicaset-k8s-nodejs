@@ -119,9 +119,13 @@ Notes:
 ## Quick Run,  YAY!
 1. I have steps 1 to 6 covered to i will jump with deploying the app.
 
+![Architecture](/Images/1.PNG)
+
 2. Confirm our infrastructure is created inside gcp console
 
 3. Now i am going to ssh into my private vm.
+
+![Architecture](/Images/2.PNG)
 
 4. Now to clone the mongo and nodejs files, i have them in a diffrent repo so you can use it but do not forget to alter the images tags.
 
@@ -134,10 +138,14 @@ Notes:
     gcloud auth print-access-token | sudo docker login -u oauth2accesstoken --password-stdin  us-east1-docker.pkg.dev
 ```
 
+![Architecture](/Images/3.PNG)
+
 6. Add GKE credentials, we can test it by running a simble listing of our nodes.
 ```Shell
     gcloud container clusters get-credentials pgke-cluster --region us-central1 --project exalted-kit
 ```
+
+![Architecture](/Images/4.PNG)
 
 7. Get the bitnami image, tag it and push it to out resgistry.
 
@@ -147,6 +155,7 @@ Notes:
     sudo docker push us-east1-docker.pkg.dev/exalted-kit/mongo-registry/bitnami:1
 ```
 
+![Architecture](/Images/5.PNG)
 
 8. Now lets build our nodejs app and push it our registry.
 
@@ -155,11 +164,19 @@ Notes:
     sudo docker push  us-east1-docker.pkg.dev/exalted-kit/mongo-registry/nodejs:1
 ```
 
+![Architecture](/Images/6.PNG)
+
+<b>Lets confirm the images exists in artifact registry</b>
+
+![Architecture](/Images/15.PNG)
+
 9. Now lets deploy our mongo replicaSet
 
 ```Shell
     kubectl create -f k8s/
 ```
+
+![Architecture](/Images/8.PNG)
 
 10. now its the final moment we are waiting deploying our nodeJS app, note that we have a LoadBalancer service to test our app so what are we waiting for!!
 
@@ -167,4 +184,27 @@ Notes:
     kubectl create -f nodejs-deployment.yml
 ```
 
-11. 
+![Architecture](/Images/9.PNG)
+
+11. Our app is a simple counter for the web site visits so i refreshed the site until it hit 6, we enter the website through the LoadBalancer service ip.
+
+![Architecture](/Images/10.PNG)
+
+
+![Architecture](/Images/11.PNG)
+
+12. Now to test the statefulness of our app, lets delete our mongoDB pods then see if the data persist
+
+![Architecture](/Images/13.PNG)
+
+13. Now That the pods are up again lets refresh the website
+
+![Architecture](/Images/14.PNG)
+
+<b>Now we see that the counter is 7 means our data is still there and our database deployment is statefull</b>
+
+14. For you knowledge that the data is stored in persistant volumes and it is located under Disks storage in GCP
+
+![Architecture](/Images/12.PNG)
+
+15. Will Thats It, do not forget to clean your resources.
