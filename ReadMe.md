@@ -207,4 +207,4 @@ Notes:
 
 ![Architecture](/Images/12.PNG)
 
-15. Will Thats It, do not forget to clean your resources.
+15. Well Thats It, do not forget to clean your resources.
